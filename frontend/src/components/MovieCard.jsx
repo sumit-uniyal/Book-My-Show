@@ -9,7 +9,7 @@ const MovieCard = () => {
         try {
             const BASE_URL = import.meta.env.VITE_BASE_URL;
             const URL = `${BASE_URL}/show/get/movies`;
-            
+
             const data = await axios.get(URL)
             setMovieData(data.data.data)
         } catch (error) {
@@ -28,7 +28,7 @@ const MovieCard = () => {
             {movieData.map((ele,index)=>{
                     return(
                         <div key={index} className=' rounded-2xl overflow-hidden'>
-                            <NavLink to='/movie'>
+                            <NavLink to={`/movie/${ele._id}`}>
                             <img className='w-[100%] h-[350px] sm:h-[450px]' src={ele.image} />
                             <div className='bg-neutral-100 px-4 py-4 font-bold'>
                                 {ele.title}
