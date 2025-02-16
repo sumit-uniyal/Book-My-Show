@@ -6,9 +6,15 @@ const movieRouter = require('./router/MovieRouter')
 const timingRouter = require('./router/TimingsRouter')
 const connectDB = require('./utils/db-connection')
 const path = require('path')
-
+const cors = require('cors')
 const app = express();
 
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials:true,
+}
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json())
 
