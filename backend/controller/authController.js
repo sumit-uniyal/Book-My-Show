@@ -27,7 +27,7 @@ const login = async(req,res)=>{
             return res.send({msg: 'Email Not Found'})
         }
         
-        const is_password = userData.comparePassword(req.body.password)
+        const is_password = await userData.comparePassword(req.body.password)
         if(!is_password){
             res.send({msg:'Invalid Login Credentials'})
         }
