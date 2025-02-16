@@ -16,7 +16,7 @@ const App = () => {
           element:<Home></Home>
         },
         {
-          path:'/movie',
+          path:'/movie/:id',
           element:<MovieDetails />
         }
       ]
