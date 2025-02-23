@@ -44,5 +44,13 @@ const getMovies = async (req,res)=>{
         console.log('Error in getting movies data '+error)
     }
 }
+const getMovieById = async(req,res)=>{
+    try {
+        movie_data = await Movie.findById(req.params.id)
+        res.send({id:movie_data})
+    } catch (error) {
+        console.log('Error in Fatcing movie by Id '+error)
+    }
+}
 
-module.exports = { createMovie: [upload.single('image'), createMovie], getMovies };
+module.exports = { createMovie: [upload.single('image'), createMovie], getMovies, getMovieById };
