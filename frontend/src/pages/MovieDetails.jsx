@@ -1,8 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import {axios} from 'axios'
 
 const MovieDetails = () => {
-    // const {id} = useParams()
+    const {id} = useParams()
+
+    const fetchMovieByData = async()=>{
+        try {
+            const url_data = '/show/get/movie/'+id;
+            const URL = VITE_BASE_URL.url_data
+            const result = axios.get(URL)
+            console.log(result)
+
+        } catch (error) {
+            
+        }
+    }
+    useEffect(()=>{
+        fetchMovieByData();
+    },[])
     
   return (
     <div className='container bg-gray-300 mx-auto mt-5 mb-4 p-5'>
