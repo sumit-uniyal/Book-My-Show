@@ -59,13 +59,8 @@ const BookingModal = (props) => {
                     <input onChange={dataChangeHandler} type="number" name="seat" id="seat" className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6" placeholder="Select Seat" />
                 </div>
                 <div className="mt-4 flex justify-between">
-                <button
-                    className="px-4 py-2 w-full bg-gray-200 rounded mr-2"
-                >
-                    Cancel
-                </button>
-                <button
-                className="px-4 py-2 w-full bg-red-600 text-white rounded">Book Now</button>
+                <button className="px-4 py-2 w-full bg-gray-200 rounded mr-2">Cancel </button>
+                <button className="px-4 py-2 w-full bg-red-600 text-white rounded">Book Now</button>
                     <ToastContainer />
 
                 </div>
