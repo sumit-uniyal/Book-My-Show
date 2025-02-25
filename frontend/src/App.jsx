@@ -3,6 +3,8 @@ import{createBrowserRouter, RouterProvider} from 'react-router-dom'
 import AppLayout from './components/UI/AppLayout'
 import Home from './pages/Home'
 import MovieDetails from './pages/MovieDetails'
+import ErrorPage from './pages/ErrorPage'
+import BookNow from './components/BookNow'
 
 
 const App = () => {
@@ -18,6 +20,13 @@ const App = () => {
         {
           path:'/movie/:id',
           element:<MovieDetails />
+        },
+        {
+          path:'/book-now/:id',
+          element:<BookNow />
+        },{
+          path: '*',
+          element:<ErrorPage />
         }
       ]
     } 

@@ -33,7 +33,20 @@ const createMovie = async(req,res)=>{
 
 const getMovies = async (req,res)=>{
     try {
-        const movie_data = await Movie.find()
+        let movie_data;
+        if(req.query.id){
+            movie_data = await Movie.findById(req.query.id)
+            if (!movie_data) {
+                return res.status(404).json({ msg: "Movie not found" });
+            }
+            movie_data = [movie_data]
+        }else{
+            movie_data = await Movie.find()
+            if (!movie_data) {
+                return res.status(404).json({ msg: "Movie not found" });
+            }
+        }
+
         const formatMovie = movie_data.map((ele)=>({
             ...ele._doc,
             image: `${req.protocol}://${req.get('host')}/uploads/${ele.image}`
@@ -44,13 +57,5 @@ const getMovies = async (req,res)=>{
         console.log('Error in getting movies data '+error)
     }
 }
-const getMovieById = async(req,res)=>{
-    try {
-        movie_data = await Movie.findById(req.params.id)
-        res.send({id:movie_data})
-    } catch (error) {
-        console.log('Error in Fatcing movie by Id '+error)
-    }
-}
 
-module.exports = { createMovie: [upload.single('image'), createMovie], getMovies, getMovieById };
+module.exports = { createMovie: [upload.single('image'), createMovie], getMovies };
