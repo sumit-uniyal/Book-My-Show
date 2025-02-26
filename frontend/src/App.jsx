@@ -5,7 +5,7 @@ import Home from './pages/Home'
 import MovieDetails from './pages/MovieDetails'
 import ErrorPage from './pages/ErrorPage'
 import BookNow from './components/BookNow'
-
+import { ToastContainer } from 'react-toastify'
 
 const App = () => {
   const router = createBrowserRouter([
@@ -33,6 +33,7 @@ const App = () => {
   ])
   return (
     <>
+      <ToastContainer />
       <RouterProvider router={router} />
     </>
   )
