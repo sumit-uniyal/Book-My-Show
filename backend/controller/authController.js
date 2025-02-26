@@ -5,7 +5,7 @@ const register = async (req,res)=>{
         const emailExist = await User.exists({email: req.body.email})
 
         if(emailExist){
-            return res.send({'msg': 'Email Already Exist'})
+            return res.status(400).json({'msg': 'Email Already Exist'})
         }
         
         const userData = await User.create({
@@ -15,7 +15,7 @@ const register = async (req,res)=>{
             phone:req.body.phone,
         })
 
-        res.send({msg:'Register Successfully', token: await userData.gettoken()})
+        res.status(200).json({msg:'Register Successfully', token: await userData.gettoken()})
     } catch (error) {
         console.log('Register Error '+ error)
     }
@@ -24,15 +24,15 @@ const login = async(req,res)=>{
     try {
         const userData = await User.findOne({email: req.body.email})
         if(!userData){
-            return res.send({msg: 'Email Not Found'})
+            return res.status(404).json({msg: 'Email Not Found'})
         }
         
         const is_password = await userData.comparePassword(req.body.password)
         if(!is_password){
-            res.send({msg:'Invalid Login Credentials'})
+            res.status(404).json({msg:'Invalid Login Credentials'})
         }
 
-        res.send({msg:'Login Successfully', token: await userData.gettoken()})
+        res.status(200).json({msg:'Login Successfully', token: await userData.gettoken()})
 
     } catch (error) {
       console.log('Error in Login '+ error)  
