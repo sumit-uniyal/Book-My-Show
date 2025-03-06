@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { WarningToast, SuccessToast, ErrorToast } from './Toaster'
 import axios from 'axios'
+import {useDispatch} from 'react-redux'
+import { checkLogin } from '../store/slice/AuthSlice'
 
 const LoginModal = (props) => {
+
+    const dispatch = useDispatch()
+
     const {setIsOpen} = props
     const [formVal, setFormVal] = useState({
         email:"",
@@ -28,8 +33,15 @@ const LoginModal = (props) => {
                 password:formVal.password
             }
             const result = await axios.post(final_url,payload)
+            
+            dispatch(checkLogin({
+                token:result.data.token,
+                isAdmin:result.data.user.isAdmin,
+                email:result.data.user.email
+            }))
 
             setIsOpen(false)
+            SuccessToast('Login Successfully')
         } catch (error) {
             if (error.response) {
                 ErrorToast(error.response.data.msg || "Login failed!");
