@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
 import logo from '/logo.png'
 import LoginModal from '../LoginModal'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../../store/slice/AuthSlice'
 
 const Header = () => {
+  const {isAuthenticated} = useSelector(state => state.auth)
+  const dispatch = useDispatch()
   const [isopen, setIsOpen] = useState(false)
+
   return (
     <>
       <div className='bg-slate-200 h-20 w-full'>  
@@ -13,7 +18,11 @@ const Header = () => {
             </div>
 
             <div className='flex items-center'>
-              <button onClick={()=>setIsOpen(!isopen)} className='uppercase bg-red-500 text-white px-4 py-2 rounded-2xl text-sm'>Log in</button>
+              {isAuthenticated ? (
+                <button onClick={()=>dispatch(logout())} className='uppercase bg-red-500 text-white px-4 py-2 rounded-2xl text-sm'>Log Out</button>
+              ):(
+                <button onClick={()=>setIsOpen(!isopen)} className='uppercase bg-red-500 text-white px-4 py-2 rounded-2xl text-sm'>Log in</button>
+              )}
             </div>
           </div>
       </div>
