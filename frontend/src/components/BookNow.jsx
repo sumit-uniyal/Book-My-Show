@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import axios from 'axios'
+import CheckoutButton from './CheckoutButton'
 
 const BookNow = () => {
   const {id} = useParams()
   const [mData, setMdata] = useState([])
   const location = useLocation();
 
-  const {seat} = location.state
+  const {seat, date} = location.state
 
   const fetchMovieByData = async()=>{
       try {
@@ -22,9 +23,11 @@ const BookNow = () => {
           console.log('Error in Fetching data')
       }
   }
+  
+  
   useEffect(()=>{
           fetchMovieByData();
-      },[])
+  },[])
   return (
     <div className='container bg-gray-300 mx-auto mt-5 mb-4 p-5'>
     <div>
@@ -41,12 +44,21 @@ const BookNow = () => {
 
                   <div className='mt-10'>
                     <p className="mt-4 font-medium flex justify-between">
+                      <span>Date:</span> 
+                      <span>{new Date(date).toLocaleDateString("en-GB", {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric"
+                            })}
+                      </span>
+                    </p>
+                    <p className="mt-4 font-medium flex justify-between">
                       <span>Seats:</span> 
                       <span>{seat}</span>
                     </p>
                     <p className="mt-4 font-medium flex justify-between">
                       <span>Sub Total:</span> 
-                      <span>-</span>
+                      <span>{seat} x 500</span>
                     </p>
                     <p className="mt-4 font-medium flex justify-between">
                       <span>Discount:</span> 
@@ -59,14 +71,12 @@ const BookNow = () => {
                 </div>
                 <p className="bg-amber-100 p-4 mt-4 font-medium flex justify-between">
                   <span>Amount Payable:</span> 
-                  <span>Rs. 500</span>
+                  <span>Rs. {seat * 500 }</span>
                 </p>
 
               </div>
                 <p className='text-sm p-4'>By proceeding, I express my consent to complete this transaction.</p>
-                <button className='w-full uppercase text-center mt-4 bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-bold'>
-                  Book Now
-                </button>
+                <CheckoutButton seat={seat} date={date}/>
             </div>
 
         </div>

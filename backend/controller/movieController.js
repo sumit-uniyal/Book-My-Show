@@ -22,6 +22,7 @@ const createMovie = async(req,res)=>{
             description:req.body.description,
             image:req.file.originalname,
             releaseDate:req.body.releaseDate,
+            price:req.body.price
         })
 
         res.send({msg:'Movie Added Successfully'})
