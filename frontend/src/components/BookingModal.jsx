@@ -28,7 +28,7 @@ const BookingModal = (props) => {
             notify()
         }else{
             navigate(`/book-now/${id}`, {
-                state:{seat:seatData.seat},
+                state:{seat:seatData.seat,date:seatData.date}
             })
         }
     }

@@ -32,7 +32,7 @@ const login = async(req,res)=>{
             res.status(404).json({msg:'Invalid Login Credentials'})
         }
 
-        res.status(200).json({msg:'Login Successfully', token: await userData.gettoken(),user:{email:userData.email, isAdmin:userData.isAdmin}})
+        res.status(200).json({msg:'Login Successfully', token: await userData.gettoken(),user:{email:userData.email, isAdmin:userData.isAdmin, user_id:userData._id}})
 
     } catch (error) {
       console.log('Error in Login '+ error)  
