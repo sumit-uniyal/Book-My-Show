@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { WarningToast, SuccessToast, ErrorToast } from './Toaster'
 import axios from 'axios'
 import {useDispatch} from 'react-redux'
-import { checkLogin } from '../store/slice/AuthSlice'
+import { Login } from '../store/slice/AuthSlice'
 
 const LoginModal = (props) => {
 
@@ -34,7 +34,7 @@ const LoginModal = (props) => {
             }
             const result = await axios.post(final_url,payload)
             
-            dispatch(checkLogin({
+            dispatch(Login({
                 token:result.data.token,
                 isAdmin:result.data.user.isAdmin,
                 email:result.data.user.email

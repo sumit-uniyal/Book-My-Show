@@ -23,12 +23,12 @@ const createBooking = async (req,res)=>{
 }
 const PaymentVerification = async(req,res)=>{
     try {
-        const { validatePaymentVerification, validateWebhookSignature } = require('./dist/utils/razorpay-utils');
+        const { validatePaymentVerification } = require('razorpay/dist/utils/razorpay-utils');
         
         const valid = validatePaymentVerification({
-            "order_id": razorpayOrderId,
-            "payment_id": razorpayPaymentId
-        }, signature, secret);
+            "order_id": req.body.razorpay_order_id,
+            "payment_id": req.body.razorpay_payment_id
+        }, req.body.razorpay_signature, process.env.RAZORPAY_SECRET_KEY);
         
         if(valid){
             res.status(201).json({'msg':'Payment Successfully'})
@@ -37,7 +37,7 @@ const PaymentVerification = async(req,res)=>{
         }
        
     } catch (error) {
-        console.log('Backend error in payment verification'+error)
+        console.log('Backend error in payment verification '+error)
     }
 }
 
