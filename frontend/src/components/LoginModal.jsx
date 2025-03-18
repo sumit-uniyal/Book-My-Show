@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { WarningToast, SuccessToast, ErrorToast } from './Toaster'
 import axios from 'axios'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import { Login } from '../store/slice/AuthSlice'
+import { popup  } from '../store/slice/LoginPopupSlice'
+import { useNavigate } from 'react-router-dom'
 
-const LoginModal = (props) => {
+const LoginModal = () => {
 
     const dispatch = useDispatch()
+    const isopen = useSelector(state=>state.loginPopup.isopen)
+    const navigate = useNavigate()
 
-    const {setIsOpen} = props
+    useEffect(()=>{
+        if (!isopen) {
+            navigate('/login')
+        }
+    },[isopen])
+
     const [formVal, setFormVal] = useState({
         email:"",
         password:""
@@ -40,7 +49,8 @@ const LoginModal = (props) => {
                 email:result.data.user.email
             }))
 
-            setIsOpen(false)
+            dispatch(popup())
+            
             SuccessToast('Login Successfully')
         } catch (error) {
             if (error.response) {
@@ -89,7 +99,7 @@ const LoginModal = (props) => {
                             </div>
                             
                             <div className="mt-4 p-5 flex justify-between">
-                                <button onClick={()=>setIsOpen(false)} className="px-4 py-2 w-full bg-gray-200 rounded mr-2">Cancel </button>
+                                <button onClick={()=>dispatch(popup())} className="px-4 py-2 w-full bg-gray-200 rounded mr-2">Cancel </button>
                                 <button type='submit' className="px-4 py-2 w-full bg-red-600 text-white rounded">Login</button>
                             </div>
                         </div>

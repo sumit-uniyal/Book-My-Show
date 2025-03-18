@@ -3,17 +3,20 @@ import logo from '/logo.png';
 import { useEffect, useState } from 'react';
 import { SuccessToast, ErrorToast } from './Toaster';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { popup  } from '../store/slice/LoginPopupSlice';
 
 const CheckoutButton = ({ seat }) => {
     const {isAuthenticated} = useSelector(state =>state.auth)
-
+    const dispatch = useDispatch()
     const [orderData, setOrderData] = useState(null);
     const navigate = useNavigate()
+    
     const createOrder = async () => {
         try {
-            if(isAuthenticated){
-                
+            if (!isAuthenticated) {
+                dispatch(popup()); // Open login modal if not authenticated
+                return;
             }
             const amount = seat * 500 * 100; // Amount in paise
             const BASE_URL = import.meta.env.VITE_BASE_URL;
