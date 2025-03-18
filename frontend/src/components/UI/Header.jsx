@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
 import logo from '/logo.png'
 import LoginModal from '../LoginModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../store/slice/AuthSlice'
+import { popup } from '../../store/slice/LoginPopupSlice'
+import { useNavigate } from 'react-router-dom'
+
 
 const Header = () => {
-  const {isAuthenticated} = useSelector(state => state.auth)
+  const {isAuthenticated,isAdmin} = useSelector(state => state.auth)
+  const {isopen} = useSelector (state=> state.loginPopup)
   const dispatch = useDispatch()
-  const [isopen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
 
   return (
     <>
@@ -19,15 +22,19 @@ const Header = () => {
 
             <div className='flex items-center'>
               {isAuthenticated ? (
-                <button onClick={()=>dispatch(logout())} className='uppercase bg-red-500 text-white px-4 py-2 rounded-2xl text-sm'>Log Out</button>
+                <>{ isAdmin && (
+                  <button onClick={()=>navigate('/admin')} className='uppercase bg-red-800 text-white px-4 py-2 mr-3 rounded-2xl text-sm'>Admin-Dashboard</button>
+                )}
+                  <button onClick={()=>dispatch(logout())} className='uppercase bg-red-500 text-white px-4 py-2 rounded-2xl text-sm'>Log Out</button>
+                </>
               ):(
-                <button onClick={()=>setIsOpen(!isopen)} className='uppercase bg-red-500 text-white px-4 py-2 rounded-2xl text-sm'>Log in</button>
+                <button onClick={()=>dispatch(popup())} className='uppercase bg-red-500 text-white px-4 py-2 rounded-2xl text-sm'>Log in</button>
               )}
             </div>
           </div>
       </div>
       {isopen &&(
-        <LoginModal setIsOpen={setIsOpen} />
+        <LoginModal />
       )}
     </>
   )

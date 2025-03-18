@@ -2,6 +2,8 @@ import { configureStore } from "@reduxjs/toolkit"
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import Authreducer from './slice/AuthSlice'
+import loginPopup from './slice/LoginPopupSlice'
+import movieData from './slice/MovieSlice'
 
 const persistConfig = {
     key: 'root',
@@ -12,7 +14,9 @@ const persistedReducer = persistReducer(persistConfig, Authreducer)
 
 const store = configureStore({
     reducer:{
-        auth: persistedReducer
+        auth: persistedReducer,
+        loginPopup:loginPopup,
+        movieData:movieData
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
