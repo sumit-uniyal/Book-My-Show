@@ -15,23 +15,24 @@ const AdminDashboard = () => {
     },[dispatch])
     const mData = movies.data;
 
-    const editHandler = (ele)=>{
-      navigate(`/edit-movie/${ele}`)
+    const booking_list = ()=>{
+      navigate('/booking-list/')
     }
     const add_movie = ()=>{
       navigate('/add-movie')
     }
+    
   return (
     <>
     <div className="p-6">
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
          <button onClick={()=>add_movie()} className='uppercase bg-green-400 text-white px-4 py-2 rounded-2xl text-sm m-2 '>Add Movie</button>
+         <button onClick={()=>booking_list()} className='uppercase bg-green-400 text-white px-4 py-2 rounded-2xl text-sm m-2 '>Booking List</button>
         <table className="w-full border-collapse">
           {/* Table Head */}
           <thead>
             <tr className="bg-gray-800 text-white text-left">
               <th className="px-6 py-4 font-semibold">ID</th>
-              <th className="px-6 py-4 font-semibold">Action</th>
               <th className="px-6 py-4 font-semibold">Movie Name</th>
               <th className="px-6 py-4 font-semibold">Price</th>
               <th className="px-6 py-4 font-semibold">Relese Date</th>
@@ -43,7 +44,6 @@ const AdminDashboard = () => {
             {mData && mData.map((ele, index) => (
               <tr key={ele._id} >
                 <td className="px-6 py-4 border-b">{index}</td>
-                <td className="px-6 py-4 border-b"><CiEdit onClick={()=>editHandler(ele._id)} /></td>
                 <td className="px-6 py-4 border-b">{ele.title}</td>
                 <td className="px-6 py-4 border-b">{ele.price} ₹</td>
                 <td className="px-6 py-4 border-b">
