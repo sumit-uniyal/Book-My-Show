@@ -1,0 +1,41 @@
+name: Deploy MERN App
+
+on:
+  push:
+    branches:
+      - main  # Change this if needed
+
+jobs:
+  deploy-backend:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: Restart Backend Server
+        run: |
+          pm2 stop backend || true
+          pm2 start backend/server.js --name backend
+          pm2 save
+
+  deploy-frontend:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies and Build
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
+      - name: Deploy Frontend
+        run: |
+          sudo rm -rf /var/www/html/*
+          sudo cp -r frontend/dist/* /var/www/html/
