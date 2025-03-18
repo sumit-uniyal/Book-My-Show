@@ -8,6 +8,7 @@ import BookNow from './components/BookNow'
 import { ToastContainer } from 'react-toastify'
 import AdminDashboard from './pages/AdminDashboard'
 import AddMovie from './pages/AddMovie'
+import BookingList from './pages/BookingList'
 
 const App = () => {
   const router = createBrowserRouter([
@@ -34,6 +35,10 @@ const App = () => {
         {
           path:'/add-movie/',
           element:<AddMovie />
+        },,
+        {
+          path:'/booking-list/',
+          element:<BookingList />
         },{
           path: '*',
           element:<ErrorPage />
