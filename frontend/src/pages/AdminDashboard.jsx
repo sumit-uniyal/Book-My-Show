@@ -2,11 +2,10 @@ import React, { useEffect } from 'react'
 import { CiEdit } from "react-icons/ci";
 import {useSelector,useDispatch} from 'react-redux'
 import { apiData } from '../store/slice/MovieSlice';
-import { useNavigate } from 'react-router-dom';
+import AdminTableHead from '../components/AdminTableHead';
 
 const AdminDashboard = () => {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   const {movies,status,error} = useSelector(state=>state.movieData)
     
@@ -14,20 +13,12 @@ const AdminDashboard = () => {
       dispatch(apiData())
     },[dispatch])
     const mData = movies.data;
-
-    const booking_list = ()=>{
-      navigate('/booking-list/')
-    }
-    const add_movie = ()=>{
-      navigate('/add-movie')
-    }
     
   return (
     <>
     <div className="p-6">
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
-         <button onClick={()=>add_movie()} className='uppercase bg-green-400 text-white px-4 py-2 rounded-2xl text-sm m-2 '>Add Movie</button>
-         <button onClick={()=>booking_list()} className='uppercase bg-green-400 text-white px-4 py-2 rounded-2xl text-sm m-2 '>Booking List</button>
+         <AdminTableHead active={'movie'} />
         <table className="w-full border-collapse">
           {/* Table Head */}
           <thead>

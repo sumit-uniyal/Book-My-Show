@@ -44,6 +44,7 @@ const LoginModal = () => {
             const result = await axios.post(final_url,payload)
             
             dispatch(Login({
+                user_id:result.data.user.user_id,
                 token:result.data.token,
                 isAdmin:result.data.user.isAdmin,
                 email:result.data.user.email

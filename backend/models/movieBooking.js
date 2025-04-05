@@ -14,9 +14,25 @@ const bookingSchema = new Schema({
         type:Number,
         required:true
    },
-   time:{
-        type:String,
-        required:true
+   orderId:{
+          type:String,
+          required:true
+   },
+   paymentId:{
+          type:String,
+          required:true
+   },
+   paymentSignature:{
+     type:String,
+     required:true
+   },
+   BookingDate:{
+     type:Date,
+     required:true
+   },
+   price:{
+     type:Number,
+     required:true
    },
    created_on:{
         type:Date,

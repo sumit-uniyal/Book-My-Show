@@ -21,6 +21,7 @@ const Header = () => {
             </div>
 
             <div className='flex items-center'>
+              <button onClick={()=>navigate('/')} className='uppercase bg-orange-500 text-white px-4 py-2 mr-3 rounded-2xl text-sm'>Home</button>
               {isAuthenticated ? (
                 <>{ isAdmin && (
                   <button onClick={()=>navigate('/admin')} className='uppercase bg-red-800 text-white px-4 py-2 mr-3 rounded-2xl text-sm'>Admin-Dashboard</button>
