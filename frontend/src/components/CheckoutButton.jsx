@@ -5,26 +5,25 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { popup } from '../store/slice/LoginPopupSlice';
 
-const CheckoutButton = ({ seat }) => {
-    const { isAuthenticated, user } = useSelector(state => state.auth); // Ensure user details are available
+const CheckoutButton = ({ seat, date, movie_id, price }) => {
+    const { isAuthenticated, user, user_id } = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     
     const createOrder = async () => {
         try {
             if (!isAuthenticated) {
-                dispatch(popup()); // Open login modal if not authenticated
+                dispatch(popup());
                 return;
             }
 
-            const amount = seat * 500 * 100; // Amount in paise
+            const amount = price * 100; // Amount in paise
             const BASE_URL = import.meta.env.VITE_BASE_URL;
             const URL = `${BASE_URL}/show/booking/create-booking`;
 
             const response = await axios.post(URL, {
                 amount,
                 currency: 'INR',
-                user_id: user?.id, // Pass user ID to track bookings
             });
 
             if (response.data.order) {
@@ -55,9 +54,19 @@ const CheckoutButton = ({ seat }) => {
                         razorpay_order_id: response.razorpay_order_id,
                         razorpay_payment_id: response.razorpay_payment_id,
                         razorpay_signature: response.razorpay_signature,
+                        date:date,
+                        movie_id:movie_id,
+                        user_id:user_id,
+                        seat:seat,
+                        amount:price
                     });
-                    SuccessToast("Booking completed Successfully")
-                    navigate('/')
+                    
+                    if(verifyResponse.status === 201){
+                        SuccessToast("Booking completed Successfully")
+                    }else{
+                        ErrorToast("Booking Failed.");
+                    }
+                    // navigate('/')
                 } catch (error) {
                     ErrorToast("Booking Failed.");
                 }
@@ -77,6 +86,12 @@ const CheckoutButton = ({ seat }) => {
         };
 
         const rzp1 = new Razorpay(options);
+
+        rzp1.on('payment.failed', function (response) {
+            console.error("Payment failed:", response.error);
+            ErrorToast("Payment failed or was cancelled.");
+        });
+        
         rzp1.open();
     };
 

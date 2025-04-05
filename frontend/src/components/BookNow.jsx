@@ -28,6 +28,7 @@ const BookNow = () => {
   useEffect(()=>{
           fetchMovieByData();
   },[])
+  
   return (
     <div className='container bg-gray-300 mx-auto mt-5 mb-4 p-5'>
     <div>
@@ -76,7 +77,7 @@ const BookNow = () => {
 
               </div>
                 <p className='text-sm p-4'>By proceeding, I express my consent to complete this transaction.</p>
-                <CheckoutButton seat={seat} date={date}/>
+                <CheckoutButton seat={seat} date={date} movie_id={mData._id} price={seat * 500 }/>
             </div>
 
         </div>
