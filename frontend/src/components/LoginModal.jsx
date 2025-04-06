@@ -1,116 +1,201 @@
 import React, { useEffect, useState } from 'react'
 import { WarningToast, SuccessToast, ErrorToast } from './Toaster'
 import axios from 'axios'
-import {useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Login } from '../store/slice/AuthSlice'
-import { popup  } from '../store/slice/LoginPopupSlice'
+import { popup } from '../store/slice/LoginPopupSlice'
 import { useNavigate } from 'react-router-dom'
 
 const LoginModal = () => {
-
     const dispatch = useDispatch()
-    const isopen = useSelector(state=>state.loginPopup.isopen)
+    const isopen = useSelector(state => state.loginPopup.isopen)
     const navigate = useNavigate()
 
-    useEffect(()=>{
+    const [isLogin, setIsLogin] = useState(true)
+    const [formVal, setFormVal] = useState({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        phone: ""
+    })
+
+    useEffect(() => {
         if (!isopen) {
             navigate('/login')
         }
-    },[isopen])
+    }, [isopen])
 
-    const [formVal, setFormVal] = useState({
-        email:"",
-        password:""
-    })
-   
-
-    const loginSubmitHandler = (e)=>{
-        e.preventDefault();
-        if(!formVal.email || !formVal.password){
-            WarningToast('Please enter email and password')
-        }else{
-            login()
-        }
+    const changeInputHandler = (e) => {
+        const { name, value } = e.target
+        setFormVal({ ...formVal, [name]: value })
     }
 
-    const login = async ()=>{
+    const toggleForm = () => {
+        setIsLogin(prev => !prev)
+        setFormVal({ name: "", email: "", password: "", confirmPassword: "" , phone:""})
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        if (!formVal.email || !formVal.password || (!isLogin && !formVal.name)) {
+            WarningToast('Please fill all fields')
+            return
+        }
+
+        if (!isLogin && formVal.password !== formVal.confirmPassword) {
+            WarningToast('Passwords do not match')
+            return
+        }
+
+        isLogin ? login() : register()
+    }
+
+    const login = async () => {
         try {
             const base_url = import.meta.env.VITE_BASE_URL
-            const final_url = base_url+ '/auth/user/login'
-            const payload = {
-                email:formVal.email,
-                password:formVal.password
-            }
-            const result = await axios.post(final_url,payload)
-            
-            dispatch(Login({
-                user_id:result.data.user.user_id,
-                token:result.data.token,
-                isAdmin:result.data.user.isAdmin,
-                email:result.data.user.email
-            }))
+            const result = await axios.post(`${base_url}/auth/user/login`, {
+                email: formVal.email,
+                password: formVal.password
+            })
 
+            dispatch(Login({
+                user_id: result.data.user.user_id,
+                token: result.data.token,
+                isAdmin: result.data.user.isAdmin,
+                email: result.data.user.email
+            }))
             dispatch(popup())
-            
-            SuccessToast('Login Successfully')
+            SuccessToast('Login Successful!')
         } catch (error) {
-            if (error.response) {
-                ErrorToast(error.response.data.msg || "Login failed!");
-            } else if (error.request) {
-                ErrorToast("No response from server!");
-            } else {
-                ErrorToast("Something went wrong!");
-            }
+            ErrorToast(error?.response?.data?.msg || "Login failed!")
         }
     }
-    const changeInputHandler = (e)=>{
-        const {name, value} = e.target
-        setFormVal({...formVal, [name]:value})
+
+    const register = async () => {
+        try {
+            const base_url = import.meta.env.VITE_BASE_URL
+            
+            const result = await axios.post(`${base_url}/auth/user/register`, {
+                name: formVal.name,
+                email: formVal.email,
+                password: formVal.password,
+                phone:formVal.phone
+            })
+            dispatch(Login({
+                user_id: result.data.user.user_id,
+                token: result.data.token,
+                isAdmin: result.data.user.isAdmin,
+                email: result.data.user.email
+            }))
+            dispatch(popup())
+            SuccessToast('Registration Successful!')
+            setIsLogin(true)
+        } catch (error) {
+            ErrorToast(error?.response?.data?.msg || "Registration failed!")
+        }
     }
-  return (
-    <>
-        <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div className="fixed inset-0 bg-gray-500/75 transition-opacity" aria-hidden="true"></div>
-            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-                <div className="flex min-h-[72%] sm:min-h-full items-end justify-center p-4 sm:text-center sm:items-center sm:p-0">
-                    <form onSubmit={loginSubmitHandler} autoComplete="off">
-                        <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 w-full sm:max-w-xl">
-                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                <div className="sm:flex sm:items-start">
-                                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                        <h3 className="text-base font-semibold text-gray-900 uppercase" id="modal-title">Log In </h3>
-                                        <div className="mt-2">
-                                            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                                                    <div className="sm:col-span-3">
-                                                        <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">Email</label>
-                                                        <div className="mt-2">
-                                                            <input onChange={changeInputHandler} value={formVal.email} type="email" name="email" id="email" autoComplete="off" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" placeholder='Enter email' />
-                                                        </div>
-                                                    </div>
-                                                    <div className="sm:col-span-3">
-                                                        <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">Password</label>
-                                                        <div className="mt-2">
-                                                            <input onChange={changeInputHandler} value={formVal.password} type="password" name="password" id="password" autoComplete="family-name" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" placeholder='Enter password' />
-                                                        </div>
-                                                    </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div className="mt-4 p-5 flex justify-between">
-                                <button onClick={()=>dispatch(popup())} className="px-4 py-2 w-full bg-gray-200 rounded mr-2">Cancel </button>
-                                <button type='submit' className="px-4 py-2 w-full bg-red-600 text-white rounded">Login</button>
-                            </div>
+
+    if (!isopen) return null
+
+    return (
+        <div className="fixed inset-0 z-10 bg-black/50 flex justify-center items-center">
+            <div className="bg-white w-full max-w-xl rounded-lg shadow-lg overflow-hidden p-6">
+                <h3 className="text-xl font-semibold text-gray-900 text-center uppercase">{isLogin ? 'Log In' : 'Register'}</h3>
+
+                <form onSubmit={handleSubmit} autoComplete="off" className="mt-6 space-y-4">
+                    {!isLogin && (
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Name</label>
+                            <input
+                                type="text"
+                                name="name"
+                                value={formVal.name}
+                                onChange={changeInputHandler}
+                                className="w-full mt-1 px-3 py-2 border rounded-md bg-blue-50"
+                                placeholder="Enter name"
+                            />
                         </div>
-                    </form>
-                </div>
+                    )}
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={formVal.email}
+                            onChange={changeInputHandler}
+                            className="w-full mt-1 px-3 py-2 border rounded-md bg-blue-50"
+                            placeholder="Enter email"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            value={formVal.password}
+                            onChange={changeInputHandler}
+                            className="w-full mt-1 px-3 py-2 border rounded-md bg-blue-50"
+                            placeholder="Enter password"
+                        />
+                    </div>
+
+                    {!isLogin && (
+                        <>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+                            <input
+                                type="password"
+                                name="confirmPassword"
+                                value={formVal.confirmPassword}
+                                onChange={changeInputHandler}
+                                className="w-full mt-1 px-3 py-2 border rounded-md bg-blue-50"
+                                placeholder="Confirm password"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                            <input
+                                type="number"
+                                name="phone"
+                                value={formVal.phone}
+                                onChange={changeInputHandler}
+                                className="w-full mt-1 px-3 py-2 border rounded-md bg-blue-50"
+                                placeholder="Phone Number"
+                            />
+                        </div>
+                        </>
+                        
+                    )}
+
+                    <div className="flex gap-2 mt-4">
+                        <button
+                            type="button"
+                            className="w-full py-2 bg-gray-200 rounded"
+                            onClick={() => dispatch(popup())}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="w-full py-2 bg-red-600 text-white rounded"
+                        >
+                            {isLogin ? 'Login' : 'Register'}
+                        </button>
+                    </div>
+                </form>
+
+                <p className="mt-4 text-center text-sm">
+                    {isLogin ? "Don't have an account?" : "Already have an account?"}
+                    <button onClick={toggleForm} className="ml-1 text-blue-600 hover:underline">
+                        {isLogin ? 'Register here' : 'Login here'}
+                    </button>
+                </p>
             </div>
         </div>
-    </>
-
-  )
+    )
 }
 
 export default LoginModal

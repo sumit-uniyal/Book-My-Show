@@ -3,7 +3,7 @@ const User = require('../models/userSchema')
 const register = async (req,res)=>{
     try {
         const emailExist = await User.exists({email: req.body.email})
-
+        
         if(emailExist){
             return res.status(400).json({'msg': 'Email Already Exist'})
         }
@@ -15,9 +15,9 @@ const register = async (req,res)=>{
             phone:req.body.phone,
         })
 
-        res.status(200).json({msg:'Register Successfully', token: await userData.gettoken()})
+        res.status(200).json({msg:'Login Successfully', token: await userData.gettoken(),user:{email:userData.email, isAdmin:userData.isAdmin, user_id:userData._id}})
     } catch (error) {
-        console.log('Register Error '+ error)
+        res.status(400).json({msg:'error in register '+error})
     }
 }
 const login = async(req,res)=>{

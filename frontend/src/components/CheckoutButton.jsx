@@ -1,5 +1,6 @@
 import axios from 'axios';
-const logo = "/logo.png";
+import logo from "../assets/logo.png";
+
 import { SuccessToast, ErrorToast } from './Toaster';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';

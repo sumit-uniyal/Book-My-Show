@@ -68,7 +68,7 @@ const MovieDetails = () => {
 
       {/* Modal */}
       {isOpen && (
-        <BookingModal id={mData._id} />
+        <BookingModal id={mData._id} setIsOpen={setIsOpen} />
       )}
     </>
   );

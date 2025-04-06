@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Bounce, ToastContainer, toast } from 'react-toastify'
 
 const BookingModal = (props) => {
-    const {id} = props
+    const {id, setIsOpen} = props
     const [seatData, setSeatData] = useState('')
     const navigate = useNavigate()
 
@@ -37,6 +37,9 @@ const BookingModal = (props) => {
         const {name, value} =e.target
         setSeatData({...seatData, [name]:value})
     }
+    const closePopup =()=>{
+        setIsOpen(false)
+    }
 
   return (
     <div className="fixed inset-0 bg-gray-500/75 flex items-center justify-center z-10">
@@ -59,8 +62,8 @@ const BookingModal = (props) => {
                     <input onChange={dataChangeHandler} type="number" name="seat" id="seat" className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6" placeholder="Select Seat" />
                 </div>
                 <div className="mt-4 flex justify-between">
-                <button className="px-4 py-2 w-full bg-gray-200 rounded mr-2">Cancel </button>
-                <button className="px-4 py-2 w-full bg-red-600 text-white rounded">Book Now</button>
+                <button className="px-4 py-2 w-full bg-gray-200 rounded mr-2" type='button' onClick={()=>closePopup()}>Cancel </button>
+                <button className="px-4 py-2 w-full bg-red-600 text-white rounded" type='submit'>Book Now</button>
                     <ToastContainer />
 
                 </div>
